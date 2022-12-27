@@ -68,6 +68,53 @@ public class MemberRepositoryV0 {
         }
     }
 
+    public void update(String memberId, int money) throws SQLException {
+        String sql = "update member set money = ? where member_id = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setInt(1, money);
+            pstmt.setString(2, memberId);
+
+            int resultSize = pstmt.executeUpdate();
+
+            log.info("resultSize={}", resultSize);
+        } catch (SQLException e) {
+            log.error("db error: ", e);
+            throw e;
+        } finally {
+            close(con, pstmt, null);
+        }
+    }
+
+    public void delete(String memberId) throws SQLException {
+        String sql = "delete from member where member_id = ?";
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+
+            pstmt.setString(1, memberId);
+
+            int resultSize = pstmt.executeUpdate();
+
+            log.info("resultSize={}", resultSize);
+        } catch (SQLException e) {
+            log.error("db error: ", e);
+            throw e;
+        } finally {
+            close(con, pstmt, null);
+        }
+    }
+
     /**
      * 사용한 자원 닫기. SQLException 이 발생하면 이후의 자원 닫기를 처리할 수 없어지는 상황을 방지하기 위해 모두 try/catch 처리 해준다.
      * @param con
